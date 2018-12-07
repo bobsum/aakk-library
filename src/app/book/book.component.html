@@ -1,0 +1,28 @@
+<div *ngIf="state === 'synced'" class="notification is-success">
+  Form is synced with Firestore
+</div>
+
+<div *ngIf="state === 'modified'" class="notification is-warning">
+  Form has unsaved changes
+</div>
+
+<div *ngIf="state === 'error'" class="notification is-danger">
+  Form tried and failed to save to Firestore
+</div>
+
+<form [formGroup]="bookForm"
+  fireForm path="books"
+  (stateChange)="changeHandler($event)">
+  Value: {{ bookForm.value | json }}
+
+  <hr/>
+  <mat-form-field>
+    <input matInput placeholder="Isbn" formControlName="isbn">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Title" formControlName="title" required>
+  </mat-form-field>
+
+  <button mat-button color="primary" type="submit" [disabled]="bookForm.invalid">Add book</button>
+</form>
