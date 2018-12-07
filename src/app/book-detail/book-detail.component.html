@@ -1,3 +1,5 @@
+{{ path$ | async }}
+
 <div *ngIf="state === 'synced'" class="notification is-success">
   Form is synced with Firestore
 </div>
@@ -11,10 +13,8 @@
 </div>
 
 <form [formGroup]="bookForm"
-  fireForm path="books"
+  fireForm [path]="path$"
   (stateChange)="changeHandler($event)">
-  Value: {{ bookForm.value | json }}
-
   <hr/>
   <mat-form-field>
     <input matInput placeholder="Isbn" formControlName="isbn">

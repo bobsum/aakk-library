@@ -13,14 +13,18 @@ import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BookComponent } from './book/book.component';
 import { FireFormDirective } from './fire-form.directive';
+import { BooksComponent } from './books/books.component';
+import { HomeComponent } from './home/home.component';
+import { BookDetailComponent } from './book-detail/book-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BookComponent,
-    FireFormDirective
+    FireFormDirective,
+    BooksComponent,
+    HomeComponent,
+    BookDetailComponent
   ],
   imports: [
     BrowserModule,

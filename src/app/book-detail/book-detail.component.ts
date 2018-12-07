@@ -1,30 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-book',
-  templateUrl: './book.component.html',
-  styleUrls: ['./book.component.scss']
+  selector: 'app-book-detail',
+  templateUrl: './book-detail.component.html',
+  styleUrls: ['./book-detail.component.scss']
 })
-export class BookComponent implements OnInit {
+export class BookDetailComponent implements OnInit {
   bookForm: FormGroup;
   state: string;
+  path$;
 
-  constructor(private fb: FormBuilder, private afs: AngularFirestore) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.path$ = this.route.paramMap.pipe(
+      map(param => param.get('id')),
+      map(id => id !== 'new' ? `books/${id}` : 'books')
+    );
+
     this.bookForm = this.fb.group({
       isbn: ['', []],
       title: ['', [Validators.required]],
-      authors: ['', []],
+      /*authors: ['', []],
       year: [null, []],
       language: [null, []],
       pages: [null, []],
       copies: ['', [Validators.required]],
       overview: ['', []],
       category: ['', [Validators.required]],
-      note: ['', []],
+      note: ['', []],*/
     });
   }
 

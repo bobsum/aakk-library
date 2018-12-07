@@ -1,15 +1,15 @@
 import { Directive, OnInit, OnDestroy, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { AngularFirestoreDocument, AngularFirestore } from '@angular/fire/firestore';
-import { tap, take, debounceTime } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { tap, take, debounceTime, switchMap } from 'rxjs/operators';
+import { Subscription, Observable } from 'rxjs';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[fireForm]'
 })
 export class FireFormDirective implements OnInit, OnDestroy {
-  @Input() path: string;
+  @Input() path: Observable<string>;
   @Input() formGroup: FormGroup;
 
   private _state: 'loading' | 'synced' | 'modified' | 'error';
@@ -29,21 +29,24 @@ export class FireFormDirective implements OnInit, OnDestroy {
   }
 
   preloadData() {
-    this.state = 'loading';
-    this.docRef = this.getDocRef(this.path);
-    this.docRef
-      .valueChanges()
-      .pipe(
-        tap(doc => {
-          if (doc) {
-            this.formGroup.patchValue(doc);
-            this.formGroup.markAsPristine();
-            this.state = 'synced';
-          }
-        }),
-        take(1)
-      )
-      .subscribe();
+    this.path.pipe(
+      switchMap(path => {
+        this.state = 'loading';
+        this.docRef = this.getDocRef(path);
+        return this.docRef
+          .valueChanges()
+          .pipe(
+            tap(doc => {
+              if (doc) {
+                this.formGroup.patchValue(doc);
+                this.formGroup.markAsPristine();
+                this.state = 'synced';
+              }
+            }),
+            take(1)
+          );
+      })
+    ).subscribe();
   }
 
   autoSave() {

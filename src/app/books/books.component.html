@@ -1,0 +1,8 @@
+<h1>Book List</h1>
+
+<ul>
+  <li *ngFor="let book of books$ | async">
+    <a routerLinkActive="active" [routerLink]="['/books', book.id]">{{ book.data.title }}</a>
+  </li>
+</ul>
+<router-outlet></router-outlet>
