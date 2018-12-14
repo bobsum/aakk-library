@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatIconModule, MatInputModule, MatButtonModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatInputModule, MatSelectModule } from '@angular/material';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -16,7 +16,8 @@ import { AppComponent } from './app.component';
 import { FireFormDirective } from './fire-form.directive';
 import { BooksComponent } from './books/books.component';
 import { HomeComponent } from './home/home.component';
-import { BookDetailComponent } from './book-detail/book-detail.component';
+import { BookEditComponent } from './book-edit/book-edit.component';
+import { StateComponent } from './state/state.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
     FireFormDirective,
     BooksComponent,
     HomeComponent,
-    BookDetailComponent
+    BookEditComponent,
+    StateComponent
   ],
   imports: [
     BrowserModule,
@@ -33,9 +35,10 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    MatButtonModule,
     MatIconModule,
     MatInputModule,
-    MatButtonModule,
+    MatSelectModule,
     NoopAnimationsModule,
     ReactiveFormsModule
   ],

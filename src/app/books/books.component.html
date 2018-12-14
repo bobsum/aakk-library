@@ -5,4 +5,5 @@
     <a routerLinkActive="active" [routerLink]="['/books', book.id]">{{ book.data.title }}</a>
   </li>
 </ul>
+<button mat-stroked-button color="primary" (click)="createNew()">Create New</button>
 <router-outlet></router-outlet>

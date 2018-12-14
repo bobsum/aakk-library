@@ -4,11 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { tap, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-book-detail',
-  templateUrl: './book-detail.component.html',
-  styleUrls: ['./book-detail.component.scss']
+  selector: 'app-book-edit',
+  templateUrl: './book-edit.component.html',
+  styleUrls: ['./book-edit.component.scss']
 })
-export class BookDetailComponent implements OnInit {
+export class BookEditComponent implements OnInit {
   bookForm: FormGroup;
   state: string;
   path$;
@@ -24,14 +24,14 @@ export class BookDetailComponent implements OnInit {
     this.bookForm = this.fb.group({
       isbn: ['', []],
       title: ['', [Validators.required]],
-      /*authors: ['', []],
-      year: [null, []],
+      authors: ['', []],
+      year: [2000, []],
       language: [null, []],
-      pages: [null, []],
+      pages: [0, [Validators.min(0)]],
       copies: ['', [Validators.required]],
       overview: ['', []],
-      category: ['', [Validators.required]],
-      note: ['', []],*/
+      category: ['book', [Validators.required]],
+      note: ['', []]
     });
   }
 

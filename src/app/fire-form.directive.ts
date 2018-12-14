@@ -40,8 +40,10 @@ export class FireFormDirective implements OnInit, OnDestroy {
               if (doc) {
                 this.formGroup.patchValue(doc);
                 this.formGroup.markAsPristine();
-                this.state = 'synced';
+              } else {
+                this.formGroup.reset();
               }
+              this.state = 'synced';
             }),
             take(1)
           );

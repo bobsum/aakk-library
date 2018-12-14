@@ -1,0 +1,52 @@
+{{ bookForm.value | json }}
+
+<form [formGroup]="bookForm"
+  fireForm [path]="path$"
+  (stateChange)="changeHandler($event)">
+  <mat-form-field>
+    <mat-select placeholder="Category" formControlName="category" required>
+      <mat-option value="book">Book</mat-option>
+      <mat-option value="dvd">DVD</mat-option>
+      <mat-option value="vhs">VHS</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Isbn" formControlName="isbn">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Title" formControlName="title" required>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Authors" formControlName="authors">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Year" formControlName="year" type="number">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Language" formControlName="language">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Pages" formControlName="pages">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <input matInput placeholder="Copies" formControlName="copies" required>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <textarea matInput placeholder="Overview" formControlName="overview"></textarea>
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <textarea matInput placeholder="Note" formControlName="note"></textarea>
+  </mat-form-field>
+  <br/>
+  <button mat-stroked-button color="primary" type="submit" [disabled]="bookForm.invalid || state !== 'modified'">Save book</button>
+</form>
+<app-state [state]="state"></app-state>
