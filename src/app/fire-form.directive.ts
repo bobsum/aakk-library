@@ -53,18 +53,18 @@ export class FireFormDirective implements OnInit, OnDestroy {
 
   autoSave() {
     this.formSub = this.formGroup.valueChanges
-    .pipe(
-      tap(change => {
-        this.state = 'modified';
-      }),
-      debounceTime(2000),
-      tap(change => {
-        if (this.formGroup.valid && this._state === 'modified') {
-          this.setDoc();
-        }
-      })
-    )
-    .subscribe();
+      .pipe(
+        tap(change => {
+          this.state = 'modified';
+        }),
+        debounceTime(2000),
+        tap(change => {
+          if (this.formGroup.valid && this._state === 'modified') {
+            this.setDoc();
+          }
+        })
+      )
+      .subscribe();
   }
 
   @HostListener('ngSubmit', ['$event'])

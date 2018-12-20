@@ -2,8 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
-import { MatButtonModule, MatIconModule, MatInputModule, MatSelectModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatIconModule,
+  MatInputModule,
+  MatSelectModule
+} from '@angular/material';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -18,6 +27,8 @@ import { BooksComponent } from './books/books.component';
 import { HomeComponent } from './home/home.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
 import { StateComponent } from './state/state.component';
+import { BookCardComponent } from './book-card/book-card.component';
+import { BookSearchDialogComponent } from './book-search-dialog/book-search-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +37,9 @@ import { StateComponent } from './state/state.component';
     BooksComponent,
     HomeComponent,
     BookEditComponent,
-    StateComponent
+    StateComponent,
+    BookCardComponent,
+    BookSearchDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +48,11 @@ import { StateComponent } from './state/state.component';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    HttpClientModule,
     MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatDividerModule,
     MatIconModule,
     MatInputModule,
     MatSelectModule,
@@ -43,6 +60,7 @@ import { StateComponent } from './state/state.component';
     ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [BookSearchDialogComponent]
 })
 export class AppModule { }

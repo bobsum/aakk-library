@@ -1,0 +1,16 @@
+<form [formGroup]="bookForm" (ngSubmit)="search()">
+  <h2 mat-dialog-title>Install Angular</h2>
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field>
+      <input matInput placeholder="ISBN" formControlName="isbn" type="search">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="bookForm.invalid">Search</button>
+  </mat-dialog-actions>
+</form>
+{{ bookForm.errors }}
+
+<br>
+{{ bookForm.value | json }}

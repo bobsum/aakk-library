@@ -2,7 +2,7 @@
 
 <ul>
   <li *ngFor="let book of books$ | async">
-    <a routerLinkActive="active" [routerLink]="['/books', book.id]">{{ book.data.title }}</a>
+    <a routerLinkActive="active" [routerLink]="['/books', book.id]">{{ book.data.title }} <mat-icon>edit</mat-icon></a>
   </li>
 </ul>
 <button mat-stroked-button color="primary" (click)="createNew()">Create New</button>

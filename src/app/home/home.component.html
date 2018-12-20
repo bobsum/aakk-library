@@ -1,3 +1,9 @@
-<p>
-  home works!
-</p>
+<div *ngFor="let book of books$ | async">
+  <app-book-card [book]="book">
+    <button mat-button>LIKE</button>
+    <button mat-button>SHARE</button>
+  </app-book-card>
+  <br/>
+</div>
+
+<button mat-raised-button (click)="openCreate()">Create</button>

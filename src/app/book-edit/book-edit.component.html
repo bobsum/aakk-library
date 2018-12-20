@@ -4,10 +4,10 @@
   fireForm [path]="path$"
   (stateChange)="changeHandler($event)">
   <mat-form-field>
-    <mat-select placeholder="Category" formControlName="category" required>
-      <mat-option value="book">Book</mat-option>
-      <mat-option value="dvd">DVD</mat-option>
-      <mat-option value="vhs">VHS</mat-option>
+    <mat-select placeholder="Format" formControlName="printType" required>
+      <mat-option value="BOOK">Book</mat-option>
+      <mat-option value="DVD">DVD</mat-option>
+      <mat-option value="VHS">VHS</mat-option>
     </mat-select>
   </mat-form-field>
   <br/>
@@ -20,11 +20,15 @@
   </mat-form-field>
   <br/>
   <mat-form-field>
-    <input matInput placeholder="Authors" formControlName="authors">
+    <input matInput placeholder="Subtitle" formControlName="subtitle" required>
   </mat-form-field>
   <br/>
+  <!--<mat-form-field>
+    <input matInput placeholder="Authors" formControlName="authors">
+  </mat-form-field>
+  <br/>-->
   <mat-form-field>
-    <input matInput placeholder="Year" formControlName="year" type="number">
+    <input matInput placeholder="PublishedDate" formControlName="publishedDate" type="number">
   </mat-form-field>
   <br/>
   <mat-form-field>
@@ -32,7 +36,7 @@
   </mat-form-field>
   <br/>
   <mat-form-field>
-    <input matInput placeholder="Pages" formControlName="pages">
+    <input matInput placeholder="Pages" formControlName="pageCount">
   </mat-form-field>
   <br/>
   <mat-form-field>
@@ -40,7 +44,7 @@
   </mat-form-field>
   <br/>
   <mat-form-field>
-    <textarea matInput placeholder="Overview" formControlName="overview"></textarea>
+    <textarea matInput placeholder="Description" formControlName="description"></textarea>
   </mat-form-field>
   <br/>
   <mat-form-field>

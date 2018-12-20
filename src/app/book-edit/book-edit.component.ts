@@ -17,21 +17,22 @@ export class BookEditComponent implements OnInit {
 
   ngOnInit() {
     this.path$ = this.route.paramMap.pipe(
-      map(param => param.get('id')),
-      map(id => id !== 'new' ? `books/${id}` : 'books')
+      map(param => `books/${param.get('id')}`)
     );
 
     this.bookForm = this.fb.group({
-      isbn: ['', []],
-      title: ['', [Validators.required]],
-      authors: ['', []],
-      year: [2000, []],
+      isbn: [null, []],
+      title: [null, [Validators.required]],
+      subtitle: [null, []],
+      authors: this.fb.array([], []),
+      publishedDate: [null, []],
+      description: [null, []],
       language: [null, []],
-      pages: [0, [Validators.min(0)]],
-      copies: ['', [Validators.required]],
-      overview: ['', []],
-      category: ['book', [Validators.required]],
-      note: ['', []]
+      pageCount: [null, [Validators.min(0)]],
+      printType: [null, [Validators.required]],
+      thumbnail: [null, []],
+      copies: [null, [Validators.required, Validators.min(0)]],
+      note: [null, []]
     });
   }
 
