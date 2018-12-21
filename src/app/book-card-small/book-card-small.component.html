@@ -3,9 +3,6 @@
     <img mat-card-avatar *ngIf="book.image" [src]="book.image">
     <mat-card-title>{{ book.title }}</mat-card-title>
     <mat-card-subtitle *ngIf="book.subtitle">{{ book.subtitle }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content *ngIf="book.description">{{ book.description | slice:0:300 }}...</mat-card-content>
-  <mat-card-actions>
     <ng-content></ng-content>
-  </mat-card-actions>
+  </mat-card-header>
 </mat-card>

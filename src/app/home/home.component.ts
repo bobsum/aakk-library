@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { GoogleBooksApiService } from '../google-books-api.service';
 import { Observable, forkJoin } from 'rxjs';
 import { Book } from '../book';
-import { map } from 'rxjs/operators';
+import { map, share } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { BookSearchDialogComponent } from '../book-search-dialog/book-search-dialog.component';
 
@@ -18,18 +18,19 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.books$ = forkJoin(
-      this.ba.getBooks('9780898868425'),
+      /*this.ba.getBooks('9780898868425'),
       this.ba.getBooks('9780470876602'),
       this.ba.getBooks('9783000405327'),
-      this.ba.getBooks('9788272862120'),
+      this.ba.getBooks('9788272862120'),*/
     ).pipe(
-      map(([a, b, c, d]) => [...a, ...b, ...c, ...d])
+      map(([a, b, c, d]) => [...a, ...b, ...c, ...d]),
+      share()
     );
   }
 
   openCreate(): void {
     const dialogRef = this.dialog.open(BookSearchDialogComponent, {
-      width: '350px'
+      // width: '350px'
     });
 
     dialogRef.afterClosed().subscribe(result => {

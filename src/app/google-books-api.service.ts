@@ -16,15 +16,13 @@ export class GoogleBooksApiService {
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
     return this.http.get<Volumes>(url)
       .pipe(
-        tap(vs => console.log(vs)),
         map(vs => {
           if (vs.items) {
             return vs.items.map(v => this.map2book(v.volumeInfo, isbn));
           } else {
             return [];
           }
-        }),
-        tap(vs => console.log(vs))
+        })
       );
   }
 

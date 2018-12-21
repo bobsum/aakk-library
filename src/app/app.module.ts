@@ -11,7 +11,8 @@ import {
   MatDividerModule,
   MatIconModule,
   MatInputModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTableModule
 } from '@angular/material';
 
 import { AngularFireModule } from '@angular/fire';
@@ -29,6 +30,7 @@ import { BookEditComponent } from './book-edit/book-edit.component';
 import { StateComponent } from './state/state.component';
 import { BookCardComponent } from './book-card/book-card.component';
 import { BookSearchDialogComponent } from './book-search-dialog/book-search-dialog.component';
+import { BookCardSmallComponent } from './book-card-small/book-card-small.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import { BookSearchDialogComponent } from './book-search-dialog/book-search-dial
     BookEditComponent,
     StateComponent,
     BookCardComponent,
-    BookSearchDialogComponent
+    BookSearchDialogComponent,
+    BookCardSmallComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import { BookSearchDialogComponent } from './book-search-dialog/book-search-dial
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    MatTableModule,
     NoopAnimationsModule,
     ReactiveFormsModule
   ],

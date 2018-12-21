@@ -1,8 +1,14 @@
 <div *ngFor="let book of books$ | async">
   <app-book-card [book]="book">
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
+    <button mat-button>Add</button>
   </app-book-card>
+  <br/>
+</div>
+
+<div *ngFor="let book of books$ | async">
+  <app-book-card-small [book]="book">
+    <button mat-button>Add</button>
+  </app-book-card-small>
   <br/>
 </div>
 

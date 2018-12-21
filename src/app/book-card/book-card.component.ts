@@ -13,5 +13,4 @@ export class BookCardComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }
