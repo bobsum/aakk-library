@@ -32,6 +32,8 @@ import { BookCardComponent } from './book-card/book-card.component';
 import { BookCardSmallComponent } from './book-card-small/book-card-small.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { LoginComponent } from './login/login.component';
+import { DropZoneDirective } from './drop-zone.directive';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { LoginComponent } from './login/login.component';
     BookCardComponent,
     BookCardSmallComponent,
     BookCreateComponent,
-    LoginComponent
+    LoginComponent,
+    DropZoneDirective,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,
