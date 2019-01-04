@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { GoogleBooksApiService } from '../google-books-api.service';
 import { Observable, forkJoin } from 'rxjs';
-import { Book } from '../book';
+import { Book } from '../models/book';
 import { map, share } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { BookSearchDialogComponent } from '../book-search-dialog/book-search-dialog.component';
@@ -13,6 +13,7 @@ import { BookSearchDialogComponent } from '../book-search-dialog/book-search-dia
 })
 export class HomeComponent implements OnInit {
   books$: Observable<Book[]>;
+  book;
 
   constructor(private ba: GoogleBooksApiService, private dialog: MatDialog) { }
 
@@ -28,14 +29,22 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  openCreate(): void {
+  openAddBook(): void {
     const dialogRef = this.dialog.open(BookSearchDialogComponent, {
       // width: '350px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log(result);
     });
+  }
+
+  onBookSelected(book: Book) {
+    this.book = book;
+  }
+
+  clearBook() {
+    this.book = null;
   }
   /*@HostListener('document:keypress', ['$event'])
   onClick(btn: KeyboardEvent) {

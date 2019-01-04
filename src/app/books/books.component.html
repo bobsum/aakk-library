@@ -1,9 +1,10 @@
 <h1>Book List</h1>
-
-<ul>
-  <li *ngFor="let book of books$ | async">
-    <a routerLinkActive="active" [routerLink]="['/books', book.id]">{{ book.data.title }} <mat-icon>edit</mat-icon></a>
-  </li>
-</ul>
-<button mat-stroked-button color="primary" (click)="createNew()">Create New</button>
-<router-outlet></router-outlet>
+<div *ngFor="let book of books$ | async">
+  <app-book-card-small [book]="book.data">
+    <a mat-icon-button [routerLink]="['/books', book.id, 'edit']">
+      <mat-icon>edit</mat-icon>
+    </a>
+  </app-book-card-small>
+  <br/>
+</div>
+<!--<button mat-stroked-button color="primary" (click)="createNew()">Create New</button>-->

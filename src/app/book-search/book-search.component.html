@@ -1,0 +1,11 @@
+<form [formGroup]="searchForm">
+  <h2 mat-dialog-title>Find Book</h2>
+  <mat-form-field>
+    <input matInput placeholder="ISBN" formControlName="isbn">
+  </mat-form-field>
+  <br/>
+  <div *ngFor="let book of books$ | async">
+    <app-book-card-small [book]="book" (click)="selectBook(book)"></app-book-card-small>
+    <br/>
+  </div>
+</form>

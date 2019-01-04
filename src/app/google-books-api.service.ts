@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Book } from './book';
+import { Book } from './models/book';
 import { Volumes, VolumeInfo, ImageLinks } from './google-books-api.models';
 import { map, tap } from 'rxjs/operators';
 
@@ -14,6 +14,7 @@ export class GoogleBooksApiService {
 
   getBooks(isbn: string): Observable<Book[]> {
     const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+
     return this.http.get<Volumes>(url)
       .pipe(
         map(vs => {

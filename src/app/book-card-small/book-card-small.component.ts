@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Book } from '../book';
+import { Book } from '../models/book';
 
 @Component({
   selector: 'app-book-card-small',

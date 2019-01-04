@@ -1,0 +1,66 @@
+<form [formGroup]="bookForm">
+  <h2 mat-dialog-title>Find Book</h2>
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field>
+      <input matInput placeholder="ISBN" formControlName="isbn">
+    </mat-form-field>
+    <br/>
+    <div *ngFor="let book of books$ | async">
+      <app-book-card-small [book]="book" (click)="addBook(book)"></app-book-card-small>
+      <br/>
+    </div>
+
+    <mat-form-field>
+      <mat-select placeholder="Format" formControlName="printType" required>
+        <mat-option value="BOOK">Book</mat-option>
+        <mat-option value="DVD">DVD</mat-option>
+        <mat-option value="VHS">VHS</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <input matInput placeholder="Title" formControlName="title" required>
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <input matInput placeholder="Subtitle" formControlName="subtitle">
+    </mat-form-field>
+    <br/>
+    <mat-divider></mat-divider>
+    <div *ngFor="let author of authors.controls; let i=index">
+      <mat-form-field>
+        <input matInput placeholder="Author" [formControl]="author">
+      </mat-form-field>
+      <button mat-icon-button (click)="deleteAuthor(i)" color="warn">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <br/>
+    </div>
+    <button mat-raised-button (click)="addAuthor()">Add Author</button>
+    <mat-divider></mat-divider>
+    <br/>
+    <mat-form-field>
+      <input matInput placeholder="PublishedDate" formControlName="publishedDate" type="date">
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <input matInput placeholder="Language" formControlName="language">
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <input matInput placeholder="Pages" formControlName="pageCount">
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <input matInput placeholder="Copies" formControlName="copies" type="number" required>
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <textarea matInput placeholder="Description" formControlName="description"></textarea>
+    </mat-form-field>
+    <br/>
+    <mat-form-field>
+      <textarea matInput placeholder="Note" formControlName="note"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+</form>

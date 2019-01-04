@@ -31,6 +31,7 @@ import { StateComponent } from './state/state.component';
 import { BookCardComponent } from './book-card/book-card.component';
 import { BookSearchDialogComponent } from './book-search-dialog/book-search-dialog.component';
 import { BookCardSmallComponent } from './book-card-small/book-card-small.component';
+import { BookSearchComponent } from './book-search/book-search.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { BookCardSmallComponent } from './book-card-small/book-card-small.compon
     StateComponent,
     BookCardComponent,
     BookSearchDialogComponent,
-    BookCardSmallComponent
+    BookCardSmallComponent,
+    BookSearchComponent
   ],
   imports: [
     BrowserModule,

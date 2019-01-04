@@ -1,4 +1,4 @@
-<div *ngFor="let book of books$ | async">
+<!--<div *ngFor="let book of books$ | async">
   <app-book-card [book]="book">
     <button mat-button>Add</button>
   </app-book-card>
@@ -10,6 +10,20 @@
     <button mat-button>Add</button>
   </app-book-card-small>
   <br/>
+</div>-->
+
+<button mat-raised-button (click)="openAddBook()">Add book</button>
+
+<button mat-raised-button (click)="clearBook()">Clear book</button>
+
+<app-book-search (bookSelected)="onBookSelected($event)"></app-book-search>
+
+<div *ngIf="book">
+  {{ book | json }}
+  <app-book-edit path="books"></app-book-edit>
 </div>
 
-<button mat-raised-button (click)="openCreate()">Create</button>
+
+<!--<div *ngFor="let book of books$ | async">
+  <app-book-edit path="books" [book]="book"></app-book-edit>
+</div>-->

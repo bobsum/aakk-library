@@ -9,9 +9,8 @@ import { Subscription, Observable } from 'rxjs';
   selector: '[fireForm]'
 })
 export class FireFormDirective implements OnInit, OnDestroy {
-  @Input() path: string;
+  @Input() path: Observable<string>;
   @Input() formGroup: FormGroup;
-  @Input() autoSave: boolean;
 
   private _state: 'loading' | 'synced' | 'modified' | 'error';
 
@@ -26,35 +25,41 @@ export class FireFormDirective implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.preloadData();
-    this.valueChanges();
+    this.autoSave();
   }
 
-  private preloadData() {
-    this.state = 'loading';
-    this.docRef = this.getDocRef(this.path);
-    this.docRef
-      .valueChanges()
-      .pipe(
-        tap(doc => {
-          if (doc) {
-            this.formGroup.patchValue(doc);
-            this.formGroup.markAsPristine();
-            this.state = 'synced';
-          }
-        }),
-        take(1)
-      ).subscribe();
+  preloadData() {
+    this.path.pipe(
+      switchMap(path => {
+        this.state = 'loading';
+        this.docRef = this.getDocRef(path);
+        return this.docRef
+          .valueChanges()
+          .pipe(
+            tap(doc => {
+              if (doc) {
+                this.formGroup.patchValue(doc);
+                this.formGroup.markAsPristine();
+              } else {
+                this.formGroup.reset();
+              }
+              this.state = 'synced';
+            }),
+            take(1)
+          );
+      })
+    ).subscribe();
   }
 
-  private valueChanges() {
+  autoSave() {
     this.formSub = this.formGroup.valueChanges
       .pipe(
-        tap(_ => {
+        tap(change => {
           this.state = 'modified';
         }),
         debounceTime(2000),
-        tap(_ => {
-          if (this.autoSave && this.formGroup.valid && this._state === 'modified') {
+        tap(change => {
+          if (this.formGroup.valid && this._state === 'modified') {
             this.setDoc();
           }
         })
@@ -67,7 +72,7 @@ export class FireFormDirective implements OnInit, OnDestroy {
     this.setDoc();
   }
 
-  private getDocRef(path: string): any {
+  getDocRef(path: string): any {
     if (path.split('/').length % 2) {
       return this.afs.doc(`${path}/${this.afs.createId()}`);
     } else {
@@ -75,18 +80,18 @@ export class FireFormDirective implements OnInit, OnDestroy {
     }
   }
 
-  private async setDoc() {
+  async setDoc() {
     try {
       await this.docRef.set(this.formGroup.value, { merge: true });
       this.state = 'synced';
     } catch (err) {
-      console.error(err);
+      console.log(err);
       this.formError.emit(err.message);
       this.state = 'error';
     }
   }
 
-  private set state(val) {
+  set state(val) {
     this._state = val;
     this.stateChange.emit(val);
   }

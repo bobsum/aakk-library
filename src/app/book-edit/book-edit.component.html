@@ -1,8 +1,8 @@
-{{ bookForm.value | json }}
-
-<form [formGroup]="bookForm"
-  fireForm [path]="path$"
-  (stateChange)="changeHandler($event)">
+<form [formGroup]="bookForm" (ngSubmit)="saveBook()">
+  <mat-form-field>
+    <input matInput placeholder="ISBN" formControlName="isbn">
+  </mat-form-field>
+  <br/>
   <mat-form-field>
     <mat-select placeholder="Format" formControlName="printType" required>
       <mat-option value="BOOK">Book</mat-option>
@@ -12,23 +12,28 @@
   </mat-form-field>
   <br/>
   <mat-form-field>
-    <input matInput placeholder="Isbn" formControlName="isbn">
-  </mat-form-field>
-  <br/>
-  <mat-form-field>
     <input matInput placeholder="Title" formControlName="title" required>
   </mat-form-field>
   <br/>
   <mat-form-field>
-    <input matInput placeholder="Subtitle" formControlName="subtitle" required>
+    <input matInput placeholder="Subtitle" formControlName="subtitle">
   </mat-form-field>
   <br/>
-  <!--<mat-form-field>
-    <input matInput placeholder="Authors" formControlName="authors">
-  </mat-form-field>
-  <br/>-->
+  <mat-divider></mat-divider>
+  <div *ngFor="let author of authors.controls; let i=index">
+    <mat-form-field>
+      <input matInput placeholder="Author" [formControl]="author">
+    </mat-form-field>
+    <button mat-icon-button (click)="deleteAuthor(i)" color="warn">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <br/>
+  </div>
+  <button mat-raised-button (click)="addAuthor()">Add Author</button>
+  <mat-divider></mat-divider>
+  <br/>
   <mat-form-field>
-    <input matInput placeholder="PublishedDate" formControlName="publishedDate" type="number">
+    <input matInput placeholder="PublishedDate" formControlName="publishedDate" type="date">
   </mat-form-field>
   <br/>
   <mat-form-field>
@@ -40,10 +45,6 @@
   </mat-form-field>
   <br/>
   <mat-form-field>
-    <input matInput placeholder="Copies" formControlName="copies" required>
-  </mat-form-field>
-  <br/>
-  <mat-form-field>
     <textarea matInput placeholder="Description" formControlName="description"></textarea>
   </mat-form-field>
   <br/>
@@ -51,6 +52,7 @@
     <textarea matInput placeholder="Note" formControlName="note"></textarea>
   </mat-form-field>
   <br/>
-  <button mat-stroked-button color="primary" type="submit" [disabled]="bookForm.invalid || state !== 'modified'">Save book</button>
+  <button mat-raised-button>Save</button>
 </form>
-<app-state [state]="state"></app-state>
+
+{{ stateChange | async }}

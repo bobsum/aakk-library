@@ -14,7 +14,7 @@ import { Book } from '../models/book';
 })
 export class BookSearchDialogComponent implements OnInit {
 
-  searchForm: FormGroup;
+  bookForm: FormGroup;
   books$: Observable<Book[]>;
 
   constructor(
@@ -24,8 +24,19 @@ export class BookSearchDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<BookSearchDialogComponent>) {}
 
   ngOnInit() {
-    this.searchForm = this.fb.group({
-      isbn: [null, [Validators.pattern(/\w{13}/g)]]
+    this.bookForm = this.fb.group({
+      isbn: [null, [Validators.pattern(/\w{13}/g)]],
+      title: [null, [Validators.required]],
+      subtitle: [null, []],
+      authors: this.fb.array([this.fb.control('', [])], []),
+      publishedDate: [null, []],
+      description: [null, []],
+      language: [null, []],
+      pageCount: [null, [Validators.min(0)]],
+      printType: [null, [Validators.required]],
+      thumbnail: [null, []],
+      copies: [null, [Validators.required, Validators.min(0)]],
+      note: [null, []]
     });
 
     this.books$ = this.isbn
@@ -38,10 +49,29 @@ export class BookSearchDialogComponent implements OnInit {
   }
 
   get isbn() {
-    return this.searchForm.get('isbn');
+    return this.bookForm.get('isbn');
   }
 
-  selectBook(book: Book) {
-    this.dialogRef.close(book);
+  get authors() {
+    return this.bookForm.get('authors') as FormArray;
+  }
+
+  addBook(book: Book) {
+    while (this.authors.length !== book.authors.length) {
+      this.authors.length > book.authors.length ? this.authors.removeAt(0) : this.authors.push(this.fb.control('', []));
+    }
+    this.bookForm.patchValue(book);
+  }
+
+  addAuthor() {
+    this.authors.push(this.fb.control('', []));
+  }
+
+  deleteAuthor(i: number) {
+    this.authors.removeAt(i);
+  }
+
+  saveBook() {
+
   }
 }
