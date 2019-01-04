@@ -14,7 +14,7 @@ export class BooksComponent implements OnInit {
   constructor(private afs: AngularFirestore, private router: Router) {}
 
   ngOnInit() {
-    this.books$ = this.afs.collection('books')
+    this.books$ = this.afs.collection('books', ref => ref.orderBy('title'))
       .snapshotChanges()
       .pipe(
         map(actions => actions.map(a => {
@@ -25,7 +25,9 @@ export class BooksComponent implements OnInit {
       );
   }
 
-  createNew() {
-    this.router.navigate(['books', this.afs.createId()]);
+  deleteBook(bookId: string) {
+    if (confirm('Are you sure you want to delete the book?')) {
+      this.afs.doc(`books/${bookId}`).delete();
+    }
   }
 }

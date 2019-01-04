@@ -33,7 +33,7 @@
   <mat-divider></mat-divider>
   <br/>
   <mat-form-field>
-    <input matInput placeholder="PublishedDate" formControlName="publishedDate" type="date">
+    <input matInput placeholder="PublishedDate" formControlName="publishedDate">
   </mat-form-field>
   <br/>
   <mat-form-field>
@@ -52,7 +52,7 @@
     <textarea matInput placeholder="Note" formControlName="note"></textarea>
   </mat-form-field>
   <br/>
-  <button mat-raised-button>Save</button>
+  <button mat-raised-button color="primary">Save</button>
 </form>
 
 {{ stateChange | async }}

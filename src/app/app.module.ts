@@ -11,8 +11,10 @@ import {
   MatDividerModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatSelectModule,
-  MatTableModule
+  MatTableModule,
+  MatToolbarModule
 } from '@angular/material';
 
 import { AngularFireModule } from '@angular/fire';
@@ -23,28 +25,24 @@ import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FireFormDirective } from './fire-form.directive';
 import { BooksComponent } from './books/books.component';
-import { HomeComponent } from './home/home.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
 import { StateComponent } from './state/state.component';
 import { BookCardComponent } from './book-card/book-card.component';
-import { BookSearchDialogComponent } from './book-search-dialog/book-search-dialog.component';
 import { BookCardSmallComponent } from './book-card-small/book-card-small.component';
-import { BookSearchComponent } from './book-search/book-search.component';
+import { BookCreateComponent } from './book-create/book-create.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FireFormDirective,
     BooksComponent,
-    HomeComponent,
     BookEditComponent,
     StateComponent,
     BookCardComponent,
-    BookSearchDialogComponent,
     BookCardSmallComponent,
-    BookSearchComponent
+    BookCreateComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -60,13 +58,14 @@ import { BookSearchComponent } from './book-search/book-search.component';
     MatDividerModule,
     MatIconModule,
     MatInputModule,
+    MatListModule,
     MatSelectModule,
     MatTableModule,
+    MatToolbarModule,
     NoopAnimationsModule,
     ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [BookSearchDialogComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

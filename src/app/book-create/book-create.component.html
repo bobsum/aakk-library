@@ -1,0 +1,17 @@
+<form [formGroup]="searchForm">
+  <h2 mat-dialog-title>Search Book</h2>
+  <mat-form-field>
+    <input matInput placeholder="ISBN" formControlName="isbn">
+  </mat-form-field>
+  <br/>
+  <div *ngFor="let book of books$ | async">
+    <app-book-card-small [book]="book">
+      <button mat-icon-button color="primary" (click)="createBook(book)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </app-book-card-small>
+    <br/>
+  </div>
+</form>
+
+<button mat-raised-button (click)="createManually()">Create manually</button>

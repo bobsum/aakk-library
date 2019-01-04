@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { tap, map, take } from 'rxjs/operators';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { tap, take, switchMap, map } from 'rxjs/operators';
 import { Book } from '../models/book';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
@@ -22,13 +22,14 @@ export class BookEditComponent implements OnInit, OnDestroy {
   private bookRef: AngularFirestoreDocument<Book>;
 
   private formSub: Subscription;
+  private pathSub: Subscription;
 
   constructor(
+    private route: ActivatedRoute,
     private fb: FormBuilder,
     private afs: AngularFirestore) { }
 
   ngOnInit() {
-    console.log('init');
     this.bookForm = this.fb.group({
       isbn: [null, [Validators.pattern(/\w{13}/g)]],
       title: [null, [Validators.required]],
@@ -45,28 +46,33 @@ export class BookEditComponent implements OnInit, OnDestroy {
 
     this.preloadBook();
     this.formSub = this.bookForm.valueChanges
-    .pipe(
-      tap(_ => {
-        this.state = 'modified';
-      })
-    )
-    .subscribe();
+      .pipe(
+        tap(_ => {
+          this.state = 'modified';
+        })
+      )
+      .subscribe();
   }
 
   private preloadBook() {
-    this.state = 'loading';
-    this.bookRef = this.getDocRef(this.path);
-    this.bookRef
-      .valueChanges()
-      .pipe(
-        tap(doc => {
-          if (doc) {
-            this.patchBook(doc);
-            this.state = 'synced';
-          }
-        }),
-        take(1)
-      ).subscribe();
+    this.pathSub = this.route.paramMap.pipe( // todo switch form router to observable path
+      map((params: ParamMap) => `books/${params.get('id')}`),
+      tap(_ => this.state = 'loading'),
+      map(path => this.getDocRef(path)),
+      tap(ref => this.bookRef = ref),
+      switchMap(ref => ref
+        .valueChanges()
+        .pipe(
+          tap(doc => {
+            if (doc) {
+              this.patchBook(doc);
+              this.state = 'synced';
+            }
+          }),
+          take(1)
+        )
+      )
+    ).subscribe();
   }
 
   get authors() {
@@ -122,5 +128,6 @@ export class BookEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.formSub.unsubscribe();
+    this.pathSub.unsubscribe();
   }
 }
