@@ -41,6 +41,7 @@ export class BookCreateComponent implements OnInit {
   }
 
   async createBook(book: Book) {
+    console.log(book);
     const bookId = this.afs.createId();
     await this.afs.doc<Book>(`books/${bookId}`)
       .set(book, { merge: true });

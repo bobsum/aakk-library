@@ -30,7 +30,16 @@ export class GoogleBooksApiService {
   private map2book(volumeInfo: VolumeInfo, isbn: string): Book {
     const { title, subtitle, authors, publishedDate, description, language, pageCount, printType, imageLinks} = volumeInfo;
     return {
-      isbn, title, subtitle, authors, publishedDate, description, language, pageCount, printType, image: this.map2image(imageLinks)
+      isbn: isbn || null,
+      title: title || null,
+      subtitle: subtitle || null,
+      authors: authors || [],
+      publishedDate: publishedDate || null,
+      description: description || null,
+      language: language || null,
+      pageCount: pageCount || 0,
+      printType: printType || 'book',
+      image: this.map2image(imageLinks)
     };
   }
 

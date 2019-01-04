@@ -33,7 +33,7 @@ import { BookCardSmallComponent } from './book-card-small/book-card-small.compon
 import { BookCreateComponent } from './book-create/book-create.component';
 import { LoginComponent } from './login/login.component';
 import { DropZoneDirective } from './drop-zone.directive';
-import { FileUploadComponent } from './file-upload/file-upload.component';
+import { ImageUploadComponent } from './image-upload/image-upload.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
     BookCreateComponent,
     LoginComponent,
     DropZoneDirective,
-    FileUploadComponent
+    ImageUploadComponent
   ],
   imports: [
     BrowserModule,

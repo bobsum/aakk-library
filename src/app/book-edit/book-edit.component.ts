@@ -47,7 +47,7 @@ export class BookEditComponent implements OnInit, OnDestroy {
     this.preloadBook();
     this.formSub = this.bookForm.valueChanges
       .pipe(
-        tap(_ => {
+        tap(() => {
           this.state = 'modified';
         })
       )
@@ -57,7 +57,7 @@ export class BookEditComponent implements OnInit, OnDestroy {
   private preloadBook() {
     this.pathSub = this.route.paramMap.pipe( // todo switch form router to observable path
       map((params: ParamMap) => `books/${params.get('id')}`),
-      tap(_ => this.state = 'loading'),
+      tap(() => this.state = 'loading'),
       map(path => this.getDocRef(path)),
       tap(ref => this.bookRef = ref),
       switchMap(ref => ref
@@ -77,6 +77,14 @@ export class BookEditComponent implements OnInit, OnDestroy {
 
   get authors() {
     return this.bookForm.get('authors') as FormArray;
+  }
+
+  get image() {
+    return this.bookForm.get('image').value;
+  }
+
+  set image(value) {
+    this.bookForm.get('image').setValue(value);
   }
 
   addAuthor() {
