@@ -3,6 +3,7 @@
   <mat-form-field>
     <input matInput placeholder="ISBN" formControlName="isbn">
   </mat-form-field>
+  <span *ngIf="serching">searching...</span>
   <br/>
   <div *ngFor="let book of books$ | async">
     <app-book-card-small [book]="book">

@@ -26,6 +26,7 @@
   .file {
     width: 100%;
     height: 100%;
+    text-align: center;
   }
 
   .file-input {
@@ -40,7 +41,7 @@
   img {
     width: 100%;
     height: 100%;
-    opacity: .8;
+    object-fit: contain;
   }
 
   .image-label {
@@ -49,5 +50,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 1.5em;
+  }
+
+  .progress {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    width: 290px;
+    transform: translate(-50%, 0);
   }
 }

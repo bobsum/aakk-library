@@ -3,7 +3,7 @@ import { Book } from '../models/book';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { GoogleBooksApiService } from '../google-books-api.service';
-import { debounceTime, filter, switchMap } from 'rxjs/operators';
+import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 
@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 export class BookCreateComponent implements OnInit {
   searchForm: FormGroup;
   books$: Observable<Book[]>;
+  serching: boolean;
 
   constructor(
     private ba: GoogleBooksApiService,
@@ -32,7 +33,9 @@ export class BookCreateComponent implements OnInit {
       .pipe(
         debounceTime(300),
         filter(x => !!x && this.isbn.valid),
-        switchMap(isbn => this.ba.getBooks(isbn))
+        tap(() => this.serching = true),
+        switchMap(isbn => this.ba.getBooks(isbn)),
+        tap(() => this.serching = false)
       );
   }
 

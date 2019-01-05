@@ -12,6 +12,8 @@ import {
   MatIconModule,
   MatInputModule,
   MatListModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatSelectModule,
   MatTableModule,
   MatToolbarModule
@@ -63,6 +65,8 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatTableModule,
     MatToolbarModule,

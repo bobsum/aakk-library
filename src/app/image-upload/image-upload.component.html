@@ -4,5 +4,8 @@
     <img *ngIf="image" [src]="image">
     <div class="image-label" *ngIf="isHovering">Drop</div>
     <div class="image-label" *ngIf="!isHovering">Choose a file</div>
+    <div class="progress" *ngIf="snapshot | async as snap">
+      <mat-progress-bar *ngIf="isActive(snap)" [value]="percentage | async"></mat-progress-bar>
+    </div>
   </label>
 </div>

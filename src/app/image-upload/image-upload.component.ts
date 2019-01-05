@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize, switchMap, tap, map, last } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-image-upload',
@@ -13,6 +14,8 @@ export class ImageUploadComponent {
   @Output() imageChange = new EventEmitter<string>();
 
   isHovering: boolean;
+  percentage: Observable<number>;
+  snapshot: Observable<any>;
 
   constructor(private storage: AngularFireStorage) { }
 
@@ -31,7 +34,8 @@ export class ImageUploadComponent {
     const filePath = `books/${new Date().getTime()}_${file.name}`; // todo take as input
 
     const task = this.storage.upload(filePath, file);
-    // this.percentage = task.percentageChanges();
+    this.percentage = task.percentageChanges();
+    this.snapshot   = task.snapshotChanges();
 
     task.snapshotChanges()
       .pipe(
@@ -40,5 +44,9 @@ export class ImageUploadComponent {
         tap(url => this.imageChange.emit(url as string))
       )
       .subscribe();
+  }
+
+  isActive(snapshot) {
+    return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;
   }
 }
