@@ -1,16 +1,6 @@
-<h1>Books</h1>
-<div *ngFor="let book of books$ | async">
-  <app-book-card-small [book]="book.data">
-    <a mat-icon-button [routerLink]="['/books', book.id, 'edit']" color="primary">
-      <mat-icon>edit</mat-icon>
-    </a>
-    <button mat-icon-button (click)="deleteBook(book.id)" color="warn">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </app-book-card-small>
-  <br/>
-</div>
-<button mat-raised-button color="primary" [routerLink]="['/books', 'create']">Create New</button>
+<h1><a [routerLink]="['/books']">Books</a></h1>
+<div><button mat-raised-button color="primary" [routerLink]="['/books', 'create']">Create New</button></div>
 <br/>
+<mat-divider></mat-divider>
 <br/>
 <router-outlet></router-outlet>

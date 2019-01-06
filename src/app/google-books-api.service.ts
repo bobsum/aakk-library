@@ -38,7 +38,7 @@ export class GoogleBooksApiService {
       description: description || null,
       language: language || null,
       pageCount: pageCount || 0,
-      printType: printType || 'book',
+      printType: printType || 'BOOK',
       image: this.map2image(imageLinks)
     };
   }

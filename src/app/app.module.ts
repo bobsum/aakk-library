@@ -36,6 +36,7 @@ import { BookCreateComponent } from './book-create/book-create.component';
 import { LoginComponent } from './login/login.component';
 import { DropZoneDirective } from './drop-zone.directive';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { BookListComponent } from './book-list/book-list.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     BookCreateComponent,
     LoginComponent,
     DropZoneDirective,
-    ImageUploadComponent
+    ImageUploadComponent,
+    BookListComponent
   ],
   imports: [
     BrowserModule,

@@ -15,7 +15,6 @@ export class ImageUploadComponent {
 
   isHovering: boolean;
   percentage: Observable<number>;
-  snapshot: Observable<any>;
 
   constructor(private storage: AngularFireStorage) { }
 
@@ -35,18 +34,16 @@ export class ImageUploadComponent {
 
     const task = this.storage.upload(filePath, file);
     this.percentage = task.percentageChanges();
-    this.snapshot   = task.snapshotChanges();
 
     task.snapshotChanges()
       .pipe(
+        tap(console.log),
         last(),
+        tap(console.log),
         switchMap(t => t.ref.getDownloadURL()),
+        tap(console.log),
         tap(url => this.imageChange.emit(url as string))
       )
       .subscribe();
-  }
-
-  isActive(snapshot) {
-    return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;
   }
 }

@@ -3,7 +3,8 @@ import { Book } from '../models/book';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { GoogleBooksApiService } from '../google-books-api.service';
-import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
+import { IsbnDbBooksApiService } from '../isbndb-books-api.service';
+import { debounceTime, filter, switchMap, tap, finalize } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 
@@ -19,19 +20,20 @@ export class BookCreateComponent implements OnInit {
 
   constructor(
     private ba: GoogleBooksApiService,
+    // private ba: IsbnDbBooksApiService,
     private fb: FormBuilder,
     private afs: AngularFirestore,
     private router: Router) {}
 
   ngOnInit() {
     this.searchForm = this.fb.group({
-      isbn: [null, [Validators.pattern(/\w{13}/g)]]
+      isbn: [null, [Validators.pattern(/^(?:\w{10}|\w{13})$/g)]]
     });
 
     this.books$ = this.isbn
       .valueChanges
       .pipe(
-        debounceTime(300),
+        debounceTime(1000),
         filter(x => !!x && this.isbn.valid),
         tap(() => this.serching = true),
         switchMap(isbn => this.ba.getBooks(isbn)),
@@ -44,7 +46,6 @@ export class BookCreateComponent implements OnInit {
   }
 
   async createBook(book: Book) {
-    console.log(book);
     const bookId = this.afs.createId();
     await this.afs.doc<Book>(`books/${bookId}`)
       .set(book, { merge: true });
