@@ -1,1 +1,1 @@
-export { generateThumbs } from './images';
+export { convertImage, generateThumbs } from './images';

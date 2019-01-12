@@ -13,9 +13,24 @@ import { join, dirname } from 'path';
 import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 
-/*export const convertImage = functions.firestore
+export const convertImage = functions.firestore
   .document("books/{bookId}")
-  .onUpdate()*/
+  .onUpdate((change, context) => {
+    const data = change.after.data();
+    const previousData = change.before.data();
+
+    if (data.convert === previousData.convert || data.convert !== true) return null;
+
+    console.log(data.image);
+    //data.image
+    // http://books.google.com/books/content?id=IXqk_0N1HgcC&printsec=frontcover&img=1&zoom=1&source=gbs_api
+    // https://firebasestorage.googleapis.com/v0/b/aakk-library.appspot.com/o/books%2F1546798984445_image.jpg?alt=media&token=01031a91-cccd-425b-9e88-2c908cacc91e
+
+    // Then return a promise of a set operation to update the count
+    return change.after.ref.update({
+      convert: false
+    });
+  })
 
 
 export const generateThumbs = functions.storage
