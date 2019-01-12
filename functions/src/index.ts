@@ -1,0 +1,1 @@
+export { generateThumbs } from './images';
