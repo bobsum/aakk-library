@@ -12,25 +12,45 @@ import { join, dirname } from 'path';
 
 import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
+import * as download from 'image-downloader';
 
 export const convertImage = functions.firestore
   .document("books/{bookId}")
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     const data = change.after.data();
     const previousData = change.before.data();
+    const bucket = admin.storage().bucket();
+
+    const bookId = context.params['bookId']
+    const workingDir = join(tmpdir(), bookId);
+    const tmpFilePath = join(workingDir, 'source.png');
 
     if (data.convert === previousData.convert || data.convert !== true) return null;
 
-    console.log(data.image);
-    //data.image
-    // http://books.google.com/books/content?id=IXqk_0N1HgcC&printsec=frontcover&img=1&zoom=1&source=gbs_api
-    // https://firebasestorage.googleapis.com/v0/b/aakk-library.appspot.com/o/books%2F1546798984445_image.jpg?alt=media&token=01031a91-cccd-425b-9e88-2c908cacc91e
+    const url = data.image as string;
 
-    // Then return a promise of a set operation to update the count
-    return change.after.ref.update({
+    if (!url) {
+      console.log('no url')
+      return null;
+    }
+
+    await fs.ensureDir(workingDir);
+
+    const { filename } = await download.image({
+      url,
+      dest: tmpFilePath
+    });
+
+    await bucket.upload(tmpFilePath, {
+      destination: join('books', bookId, 'source.png')
+    });
+
+    await change.after.ref.update({
       convert: false
     });
-  })
+
+    return fs.remove(workingDir);
+  });
 
 
 export const generateThumbs = functions.storage
@@ -41,10 +61,10 @@ export const generateThumbs = functions.storage
     const fileName = filePath.split('/').pop();
     const bucketDir = dirname(filePath);
 
-    const workingDir = join(tmpdir(), 'thumbs');
+    const workingDir = join(tmpdir(), bucketDir, 'thumbs');
     const tmpFilePath = join(workingDir, 'source.png');
 
-    if (fileName.includes('thumb@') || !object.contentType.includes('image')) {
+    if (fileName.startsWith('thumb@') || !object.contentType.includes('image')) {
       console.log('exiting function');
       return false;
     }
@@ -58,15 +78,18 @@ export const generateThumbs = functions.storage
     });
 
     // 3. Resize the images and define an array of upload promises
-    const sizes = [64, 128, 256];
+    const sizes = [
+      { name: 'avatar', options: { height: 40, width: 40 }},
+      { name: 'cover', options: { height: 400 }}
+    ];
 
     const uploadPromises = sizes.map(async size => {
-      const thumbName = `thumb@${size}_${fileName}`;
+      const thumbName = `thumb@${size.name}.png`;
       const thumbPath = join(workingDir, thumbName);
 
       // Resize source image
       await sharp(tmpFilePath)
-        .resize(size, size)
+        .resize(size.options)
         .toFile(thumbPath);
 
       // Upload to GCS

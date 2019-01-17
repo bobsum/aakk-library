@@ -37,11 +37,8 @@ export class ImageUploadComponent {
 
     task.snapshotChanges()
       .pipe(
-        tap(console.log),
         last(),
-        tap(console.log),
         switchMap(t => t.ref.getDownloadURL()),
-        tap(console.log),
         tap(url => this.imageChange.emit(url as string))
       )
       .subscribe();

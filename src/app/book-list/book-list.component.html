@@ -6,6 +6,9 @@
     <button mat-icon-button (click)="deleteBook(book.id)" color="warn">
       <mat-icon>delete</mat-icon>
     </button>
+    <button *ngIf="book.data.convert === undefined" mat-icon-button (click)="convertBook(book.id)"ng >
+      <mat-icon>transform</mat-icon>
+    </button>
   </app-book-card-small>
   <br/>
 </div>
