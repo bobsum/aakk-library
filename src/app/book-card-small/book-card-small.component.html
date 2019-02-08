@@ -1,8 +1,8 @@
 <mat-card class="example-card">
   <mat-card-header>
-    <img mat-card-avatar *ngIf="book.image" [src]="book.image">
+    <img mat-card-avatar *ngIf="book?.thumbnails?.avatar" [src]="book?.thumbnails?.avatar">
     <mat-card-title>{{ book.title }}</mat-card-title>
-    <mat-card-subtitle *ngIf="book.subtitle">{{ book.subtitle }}</mat-card-subtitle>
+    <mat-card-subtitle *ngIf="book?.subtitle">{{ book.subtitle }}</mat-card-subtitle>
     <ng-content></ng-content>
   </mat-card-header>
 </mat-card>

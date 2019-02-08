@@ -8,7 +8,11 @@ export class Book {
   language: string;
   pageCount: number;
   printType: string;
-  image: string;
+  imageUrl: string;
   copies?: number;
   note?: string;
+  thumbnails?: {
+    avatar: string;
+    cover: string;
+  };
 }

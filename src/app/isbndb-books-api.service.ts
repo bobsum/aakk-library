@@ -36,7 +36,7 @@ export class IsbnDbBooksApiService {
       language: language || null,
       pageCount: pages || 0,
       printType: 'BOOK',
-      image: null
+      imageUrl: null
     };
   }
 }

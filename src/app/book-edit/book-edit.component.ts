@@ -13,8 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class BookEditComponent implements OnInit, OnDestroy {
   bookForm: FormGroup;
-  @Input() path: string;
-
+  path: string;
   private _state: 'loading' | 'synced' | 'modified' | 'error';
 
   @Output() stateChange = new EventEmitter<string>();
@@ -40,7 +39,7 @@ export class BookEditComponent implements OnInit, OnDestroy {
       language: [null, []],
       pageCount: [null, [Validators.min(0)]],
       printType: [null, [Validators.required]],
-      image: [null, []],
+      thumbnails: [null, []],
       note: [null, []]
     });
 
@@ -58,9 +57,10 @@ export class BookEditComponent implements OnInit, OnDestroy {
     this.pathSub = this.route.paramMap.pipe( // todo switch form router to observable path
       map((params: ParamMap) => `books/${params.get('id')}`),
       tap(() => this.state = 'loading'),
+      tap(path => this.path =  `${path}/source.jpg`),
       map(path => this.getDocRef(path)),
       tap(ref => this.bookRef = ref),
-      switchMap(ref => ref
+      switchMap(ref => ref // todo for some reason state is never loading
         .valueChanges()
         .pipe(
           tap(doc => {
@@ -71,7 +71,7 @@ export class BookEditComponent implements OnInit, OnDestroy {
           }),
           take(1)
         )
-      )
+      ),
     ).subscribe();
   }
 
@@ -79,12 +79,12 @@ export class BookEditComponent implements OnInit, OnDestroy {
     return this.bookForm.get('authors') as FormArray;
   }
 
-  get image() {
-    return this.bookForm.get('image').value;
+  get thumbnails() {
+    return this.bookForm.get('thumbnails').value;
   }
 
-  set image(value) {
-    this.bookForm.get('image').setValue(value);
+  get imagePath() {
+    return this.path; // todo only allow image upload after first save
   }
 
   addAuthor() {

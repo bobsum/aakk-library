@@ -14,55 +14,51 @@ import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 import * as download from 'image-downloader';
 
-export const convertImage = functions.firestore
+export const downloadImage = functions.firestore
   .document("books/{bookId}")
-  .onUpdate(async (change, context) => {
-    const data = change.after.data();
-    const previousData = change.before.data();
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    const url = data.imageUrl as string;
+
+    if (!url) {
+      console.log('no image url');
+      return null;
+    }
+
     const bucket = admin.storage().bucket();
 
     const bookId = context.params['bookId']
     const workingDir = join(tmpdir(), bookId);
-    const tmpFilePath = join(workingDir, 'source.png');
-
-    if (data.convert === previousData.convert || data.convert !== true) return null;
-
-    const url = data.image as string;
-
-    if (!url) {
-      console.log('no url')
-      return null;
-    }
+    const tmpFilePath = join(workingDir, 'source.jpg');
 
     await fs.ensureDir(workingDir);
 
-    const { filename } = await download.image({
+    await download.image({
       url,
       dest: tmpFilePath
     });
 
     await bucket.upload(tmpFilePath, {
-      destination: join('books', bookId, 'source.png')
-    });
-
-    await change.after.ref.update({
-      convert: false
+      destination: join('books', bookId, 'source.jpg')
     });
 
     return fs.remove(workingDir);
   });
-
 
 export const generateThumbs = functions.storage
   .object()
   .onFinalize(async object => {
     const bucket = gcs.bucket(object.bucket);
     const filePath = object.name;
-    const fileName = filePath.split('/').pop();
+    const [root, bookId, fileName] = filePath.split('/');
+
+    if (root !== 'books') {
+      return false;
+    }
     const bucketDir = dirname(filePath);
 
     const workingDir = join(tmpdir(), bucketDir, 'thumbs');
-    const tmpFilePath = join(workingDir, 'source.png');
+    const tmpFilePath = join(workingDir, 'source.jpg');
 
     if (fileName.startsWith('thumb@') || !object.contentType.includes('image')) {
       console.log('exiting function');
@@ -84,23 +80,45 @@ export const generateThumbs = functions.storage
     ];
 
     const uploadPromises = sizes.map(async size => {
-      const thumbName = `thumb@${size.name}.png`;
+      const thumbName = `thumb@${size.name}.jpg`;
       const thumbPath = join(workingDir, thumbName);
 
       // Resize source image
       await sharp(tmpFilePath)
+        .rotate()
         .resize(size.options)
         .toFile(thumbPath);
 
       // Upload to GCS
-      return bucket.upload(thumbPath, {
+      const [file] = await bucket.upload(thumbPath, {
         destination: join(bucketDir, thumbName)
       });
+
+      const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: '01-01-2500',
+      });
+
+      return { name: size.name, url };
     });
 
     // 4. Run the upload operations
-    await Promise.all(uploadPromises);
+    const urls = await Promise.all(uploadPromises);
 
     // 5. Cleanup remove the tmp/thumbs from the filesystem
-    return fs.remove(workingDir);
+    await fs.remove(workingDir);
+
+    // 6. Update book
+    const [source] = await bucket.file(join('books', bookId, 'source.jpg'))
+    .getSignedUrl({
+      action: 'read',
+      expires: '01-01-2500',
+    })
+
+    const thumbnails = urls.reduce((acc, value) => {
+      acc[value.name] = value.url
+      return acc;
+    }, { source });
+
+    return admin.firestore().doc(`books/${bookId}`).update({ thumbnails });
   });

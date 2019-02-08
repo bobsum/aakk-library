@@ -9,9 +9,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./image-upload.component.scss']
 })
 export class ImageUploadComponent {
-
-  @Input() image: string;
-  @Output() imageChange = new EventEmitter<string>();
+  @Input() path: string;
+  @Input() preview: string;
 
   isHovering: boolean;
   percentage: Observable<number>;
@@ -30,17 +29,7 @@ export class ImageUploadComponent {
       return;
     }
 
-    const filePath = `books/${new Date().getTime()}_${file.name}`; // todo take as input
-
-    const task = this.storage.upload(filePath, file);
+    const task = this.storage.upload(this.path, file);
     this.percentage = task.percentageChanges();
-
-    task.snapshotChanges()
-      .pipe(
-        last(),
-        switchMap(t => t.ref.getDownloadURL()),
-        tap(url => this.imageChange.emit(url as string))
-      )
-      .subscribe();
   }
 }
