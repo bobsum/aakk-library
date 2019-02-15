@@ -122,3 +122,48 @@ export const generateThumbs = functions.storage
 
     return admin.firestore().doc(`books/${bookId}`).update({ thumbnails });
   });
+
+export const getDownloadUrl = async (file: Storage.File): Promise<string> => {
+  const [metadata] = await file.getMetadata();
+  const [token] = metadata.metadata.firebaseStorageDownloadTokens.split(',');
+
+  //todo handle if no token https://stackoverflow.com/questions/42956250/get-download-url-from-file-uploaded-with-cloud-functions-for-firebase
+
+  console.log(metadata.metadata);
+  console.log(token);
+  return `https://firebasestorage.googleapis.com/v0/b/${metadata.bucket}/o/${encodeURIComponent(metadata.name)}?alt=media&token=${token}`;
+}
+
+export const convertImage = functions.firestore
+  .document("books/{bookId}")
+  .onUpdate(async (change, context) => {
+    const data = change.after.data();
+    const previousData = change.before.data();
+
+    if (data.convert === previousData.convert && data.convert !== true) return null;
+
+    const bookId = context.params['bookId']
+
+    const bucket = admin.storage().bucket();
+
+    const thumbs = [
+      { name: 'source', path: 'source.jpg' },
+      { name: 'avatar', path: 'thumb@avatar.jpg' },
+      { name: 'cover', path: 'thumb@cover.jpg' }
+    ];
+
+    const urls = await Promise.all(thumbs.map(async thumb => {
+      const file  = bucket.file(join('books', bookId, thumb.path));
+      const url = await getDownloadUrl(file);
+
+      return { name: thumb.name, url };
+    }));
+
+    const thumbnails = urls.reduce((acc, value) => {
+      acc[value.name] = value.url
+      return acc;
+    }, { });
+
+    return admin.firestore().doc(`books/${bookId}`)
+      .update({ convert: admin.firestore.FieldValue.delete(), thumbnails });
+  });
