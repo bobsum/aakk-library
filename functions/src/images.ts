@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-
+import * as uuid from 'uuid/v4';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp();
@@ -14,14 +14,13 @@ import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 import * as download from 'image-downloader';
 
-export const downloadImage = functions.firestore
+/*export const downloadImage = functions.firestore
   .document("books/{bookId}")
   .onCreate(async (snap, context) => {
     const data = snap.data();
     const url = data.imageUrl as string;
 
     if (!url) {
-      console.log('no image url');
       return null;
     }
 
@@ -39,7 +38,12 @@ export const downloadImage = functions.firestore
     });
 
     await bucket.upload(tmpFilePath, {
-      destination: join('books', bookId, 'source.jpg')
+      destination: join('books', bookId, 'source.jpg'),
+      metadata: {
+        metadata: {
+          firebaseStorageDownloadTokens: uuid()
+        }
+      }
     });
 
     return fs.remove(workingDir);
@@ -53,7 +57,7 @@ export const generateThumbs = functions.storage
     const [root, bookId, fileName] = filePath.split('/');
 
     if (root !== 'books') {
-      return false;
+      return null;
     }
     const bucketDir = dirname(filePath);
 
@@ -61,15 +65,15 @@ export const generateThumbs = functions.storage
     const tmpFilePath = join(workingDir, 'source.jpg');
 
     if (fileName.startsWith('thumb@') || !object.contentType.includes('image')) {
-      console.log('exiting function');
-      return false;
+      return null;
     }
 
     // 1. Ensure thumbnail dir exists
     await fs.ensureDir(workingDir);
 
     // 2. Download Source File
-    await bucket.file(filePath).download({
+    const sourceFile = bucket.file(filePath);
+    await sourceFile.download({
       destination: tmpFilePath
     });
 
@@ -91,13 +95,15 @@ export const generateThumbs = functions.storage
 
       // Upload to GCS
       const [file] = await bucket.upload(thumbPath, {
-        destination: join(bucketDir, thumbName)
+        destination: join(bucketDir, thumbName),
+        metadata: {
+          metadata: {
+            firebaseStorageDownloadTokens: uuid()
+          }
+        }
       });
 
-      const [url] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-2500',
-      });
+      const url = await getDownloadUrl(file);
 
       return { name: size.name, url };
     });
@@ -109,11 +115,7 @@ export const generateThumbs = functions.storage
     await fs.remove(workingDir);
 
     // 6. Update book
-    const [source] = await bucket.file(join('books', bookId, 'source.jpg'))
-    .getSignedUrl({
-      action: 'read',
-      expires: '01-01-2500',
-    })
+    const source = await getDownloadUrl(sourceFile);
 
     const thumbnails = urls.reduce((acc, value) => {
       acc[value.name] = value.url
@@ -121,16 +123,22 @@ export const generateThumbs = functions.storage
     }, { source });
 
     return admin.firestore().doc(`books/${bookId}`).update({ thumbnails });
-  });
+  });*/
 
-export const getDownloadUrl = async (file: Storage.File): Promise<string> => {
+async function getDownloadUrl(file: Storage.File): Promise<string> {
+  // based on https://stackoverflow.com/a/43764656
   const [metadata] = await file.getMetadata();
+
+  if (!metadata.metadata) {
+    metadata.metadata = { }
+  }
+  if (!metadata.metadata.firebaseStorageDownloadTokens) {
+    metadata.metadata.firebaseStorageDownloadTokens = uuid();
+    await file.setMetadata(metadata);
+  }
+
   const [token] = metadata.metadata.firebaseStorageDownloadTokens.split(',');
 
-  //todo handle if no token https://stackoverflow.com/questions/42956250/get-download-url-from-file-uploaded-with-cloud-functions-for-firebase
-
-  console.log(metadata.metadata);
-  console.log(token);
   return `https://firebasestorage.googleapis.com/v0/b/${metadata.bucket}/o/${encodeURIComponent(metadata.name)}?alt=media&token=${token}`;
 }
 
@@ -140,13 +148,28 @@ export const convertImage = functions.firestore
     const data = change.after.data();
     const previousData = change.before.data();
 
-    if (data.convert === previousData.convert && data.convert !== true) return null;
+    if (data.convert === previousData.convert || data.convert !== true) return null;
 
     const bookId = context.params['bookId']
 
     const bucket = admin.storage().bucket();
 
-    const thumbs = [
+    const file  = bucket.file(join('books', bookId, 'source.jpg' ));
+
+    const [image] = await file.move(join('books', bookId, 'image.jpg' ));
+
+    const url = await getDownloadUrl(image);
+
+    const {source, ...thumbnails} = data.thumbnails;
+
+    return admin.firestore().doc(`books/${bookId}`)
+      .update({
+        image: url,
+        convert: admin.firestore.FieldValue.delete(),
+        thumbnails
+      });
+
+    /*const thumbs = [
       { name: 'source', path: 'source.jpg' },
       { name: 'avatar', path: 'thumb@avatar.jpg' },
       { name: 'cover', path: 'thumb@cover.jpg' }
@@ -165,5 +188,5 @@ export const convertImage = functions.firestore
     }, { });
 
     return admin.firestore().doc(`books/${bookId}`)
-      .update({ convert: admin.firestore.FieldValue.delete(), thumbnails });
+      .update({ convert: admin.firestore.FieldValue.delete(), thumbnails });*/
   });

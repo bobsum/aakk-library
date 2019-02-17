@@ -16,7 +16,8 @@
     "firebase-functions": "^2.1.0",
     "fs-extra": "^7.0.1",
     "image-downloader": "^3.4.2",
-    "sharp": "^0.21.1"
+    "sharp": "^0.21.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "tslint": "~5.8.0",
