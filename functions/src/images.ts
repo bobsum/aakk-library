@@ -14,7 +14,7 @@ import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 import * as download from 'image-downloader';
 
-/*export const downloadImage = functions.firestore
+export const downloadImage = functions.firestore
   .document("books/{bookId}")
   .onCreate(async (snap, context) => {
     const data = snap.data();
@@ -26,9 +26,9 @@ import * as download from 'image-downloader';
 
     const bucket = admin.storage().bucket();
 
-    const bookId = context.params['bookId']
+    const bookId = context.params['bookId'];
     const workingDir = join(tmpdir(), bookId);
-    const tmpFilePath = join(workingDir, 'source.jpg');
+    const tmpFilePath = join(workingDir, 'image.jpg');
 
     await fs.ensureDir(workingDir);
 
@@ -38,7 +38,7 @@ import * as download from 'image-downloader';
     });
 
     await bucket.upload(tmpFilePath, {
-      destination: join('books', bookId, 'source.jpg'),
+      destination: join('books', bookId, 'image.jpg'),
       metadata: {
         metadata: {
           firebaseStorageDownloadTokens: uuid()
@@ -62,7 +62,7 @@ export const generateThumbs = functions.storage
     const bucketDir = dirname(filePath);
 
     const workingDir = join(tmpdir(), bucketDir, 'thumbs');
-    const tmpFilePath = join(workingDir, 'source.jpg');
+    const tmpFilePath = join(workingDir, 'image.jpg');
 
     if (fileName.startsWith('thumb@') || !object.contentType.includes('image')) {
       return null;
@@ -115,15 +115,13 @@ export const generateThumbs = functions.storage
     await fs.remove(workingDir);
 
     // 6. Update book
-    const source = await getDownloadUrl(sourceFile);
-
     const thumbnails = urls.reduce((acc, value) => {
       acc[value.name] = value.url
       return acc;
-    }, { source });
+    }, { });
 
     return admin.firestore().doc(`books/${bookId}`).update({ thumbnails });
-  });*/
+  });
 
 async function getDownloadUrl(file: Storage.File): Promise<string> {
   // based on https://stackoverflow.com/a/43764656
@@ -142,6 +140,15 @@ async function getDownloadUrl(file: Storage.File): Promise<string> {
   return `https://firebasestorage.googleapis.com/v0/b/${metadata.bucket}/o/${encodeURIComponent(metadata.name)}?alt=media&token=${token}`;
 }
 
+export const cleanupAfterBook = functions.firestore
+  .document("books/{bookId}")
+  .onDelete(async (snap, context) => {
+    const bookId = context.params['bookId'];
+
+    console.log(`'books/${bookId}' should be deleted`);
+    return;
+  });
+
 export const convertImage = functions.firestore
   .document("books/{bookId}")
   .onUpdate(async (change, context) => {
@@ -150,7 +157,7 @@ export const convertImage = functions.firestore
 
     if (data.convert === previousData.convert || data.convert !== true) return null;
 
-    const bookId = context.params['bookId']
+    const bookId = context.params['bookId'];
 
     const bucket = admin.storage().bucket();
 

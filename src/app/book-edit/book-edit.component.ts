@@ -12,16 +12,13 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./book-edit.component.scss']
 })
 export class BookEditComponent implements OnInit, OnDestroy {
-  bookForm: FormGroup;
-  path: string;
-  private _state: 'loading' | 'synced' | 'modified' | 'error';
-
-  @Output() stateChange = new EventEmitter<string>();
-
-  private bookRef: AngularFirestoreDocument<Book>;
-
   private formSub: Subscription;
   private pathSub: Subscription;
+
+  bookForm: FormGroup;
+  state: 'loading' | 'synced' | 'modified' | 'error';
+
+  bookRef: AngularFirestoreDocument<Book>;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +36,6 @@ export class BookEditComponent implements OnInit, OnDestroy {
       language: [null, []],
       pageCount: [null, [Validators.min(0)]],
       printType: [null, [Validators.required]],
-      thumbnails: [null, []],
       note: [null, []]
     });
 
@@ -57,17 +53,15 @@ export class BookEditComponent implements OnInit, OnDestroy {
     this.pathSub = this.route.paramMap.pipe( // todo switch form router to observable path
       map((params: ParamMap) => `books/${params.get('id')}`),
       tap(() => this.state = 'loading'),
-      tap(path => this.path =  `${path}/source.jpg`),
-      map(path => this.getDocRef(path)),
-      tap(ref => this.bookRef = ref),
-      switchMap(ref => ref // todo for some reason state is never loading
+      map(path => this.bookRef = this.afs.doc<Book>(path)),
+      switchMap(ref => ref
         .valueChanges()
         .pipe(
           tap(doc => {
             if (doc) {
               this.patchBook(doc);
-              this.state = 'synced';
             }
+            this.state = 'synced';
           }),
           take(1)
         )
@@ -77,14 +71,6 @@ export class BookEditComponent implements OnInit, OnDestroy {
 
   get authors() {
     return this.bookForm.get('authors') as FormArray;
-  }
-
-  get thumbnails() {
-    return this.bookForm.get('thumbnails').value;
-  }
-
-  get imagePath() {
-    return this.path; // todo only allow image upload after first save
   }
 
   addAuthor() {
@@ -108,14 +94,6 @@ export class BookEditComponent implements OnInit, OnDestroy {
     this.bookForm.markAsPristine();
   }
 
-  private getDocRef(path: string): AngularFirestoreDocument<Book> {
-    if (path.split('/').length % 2) {
-      return this.afs.doc<Book>(`${path}/${this.afs.createId()}`);
-    } else {
-      return this.afs.doc<Book>(path);
-    }
-  }
-
   private async setDoc() {
     try {
       if (this.bookForm.valid) {
@@ -126,12 +104,6 @@ export class BookEditComponent implements OnInit, OnDestroy {
       console.error(err);
       this.state = 'error';
     }
-  }
-
-  // Setter for state changes
-  set state(val) {
-    this._state = val;
-    this.stateChange.emit(val);
   }
 
   ngOnDestroy() {

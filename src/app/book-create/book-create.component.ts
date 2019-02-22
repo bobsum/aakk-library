@@ -19,8 +19,7 @@ export class BookCreateComponent implements OnInit {
   serching: boolean;
 
   constructor(
-    private ba: GoogleBooksApiService,
-    // private ba: IsbnDbBooksApiService,
+    private ba: GoogleBooksApiService, // todo use interface
     private fb: FormBuilder,
     private afs: AngularFirestore,
     private router: Router) {}

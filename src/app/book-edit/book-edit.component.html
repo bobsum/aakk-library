@@ -52,8 +52,7 @@
     <textarea matInput placeholder="Note" formControlName="note"></textarea>
   </mat-form-field>
   <br/>
-  <app-image-upload [preview]="thumbnails?.cover" [path]="imagePath"></app-image-upload>
+    <app-image-upload [bookRef]="bookRef"></app-image-upload>
   <br/>
-  <button mat-raised-button color="primary" [disabled]="(stateChange | async) !== 'modified'">Save</button>
+  <button mat-raised-button color="primary" [disabled]="state !== 'modified'">Save</button>
 </form>
-{{ stateChange | async }}

@@ -29,8 +29,4 @@ export class BookListComponent implements OnInit {
       this.afs.doc(`books/${bookId}`).delete();
     }
   }
-
-  convertBook(bookId: string) {
-    this.afs.doc(`books/${bookId}`).update({convert: true});
-  }
 }
