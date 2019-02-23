@@ -1,15 +1,20 @@
 .dropzone {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
   height: 300px;
   width: 300px;
   border: 2px dashed #f16624;
   border-radius: 5px;
   margin: 10px 0;
-  padding: 3px;
+
+  &.disabled {
+    background-color: silver;
+    border-color: gray;
+    color: gray;
+    .zone {
+      .image-label {
+        background-color: transparent;
+      }
+    }
+  }
 
   &.hovering {
     border: 2px solid #f16624;
@@ -23,40 +28,52 @@
     }
   }
 
-  .file {
-    width: 100%;
+  .zone {
+    flex-direction: column;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
-    text-align: center;
-  }
-
-  .file-input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-  }
-
-  img {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
 
-  .image-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5em;
-  }
+    .file {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
 
-  .progress {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    width: 290px;
-    transform: translate(-50%, 0);
+    .file-input {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .image-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5em;
+      text-align: center;
+      background-color: #FFFFFFBB;
+    }
+
+    .progress {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      width: 290px;
+      transform: translate(-50%, 0);
+    }
   }
 }

@@ -27,7 +27,7 @@ export class BookEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.bookForm = this.fb.group({
-      isbn: [null, [Validators.pattern(/\w{10}|\w{13}/g)]],
+      isbn: [null, [Validators.pattern(/^(?:\w{10}|\w{13})$/g)]],
       title: [null, [Validators.required]],
       subtitle: [null, []],
       authors: this.fb.array([], []),

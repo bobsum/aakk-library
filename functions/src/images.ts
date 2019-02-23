@@ -115,12 +115,18 @@ export const generateThumbs = functions.storage
     await fs.remove(workingDir);
 
     // 6. Update book
+
+    const image = await getDownloadUrl(sourceFile);
+
     const thumbnails = urls.reduce((acc, value) => {
       acc[value.name] = value.url
       return acc;
     }, { });
 
-    return admin.firestore().doc(`books/${bookId}`).update({ thumbnails });
+    return admin.firestore().doc(`books/${bookId}`).update({
+      image,
+      thumbnails
+    });
   });
 
 async function getDownloadUrl(file: Storage.File): Promise<string> {

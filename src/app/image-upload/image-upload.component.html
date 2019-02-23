@@ -1,11 +1,16 @@
-<div class="dropzone" dropZone (hovered)="toggleHover($event)" (dropped)="startUpload($event)" [class.hovering]="isHovering">
-  <label class="file">
-    <input class="file-input" type="file" (change)="startUpload($event.target.files)">
-    <img [src]="preview" *ngIf="(book | async)?.thumbnails?.cover; let preview">
-    <div class="image-label" *ngIf="isHovering">Drop</div>
-    <div class="image-label" *ngIf="!isHovering">Choose a file</div>
-    <div class="progress" *ngIf="percentage | async as pct">
-      <mat-progress-bar [value]="pct"></mat-progress-bar>
-    </div>
-  </label>
+<div class="dropzone" [class.hovering]="isHovering" [class.disabled]="!(book | async)">
+  <div class="zone" dropZone (hovered)="toggleHover($event)" (dropped)="startUpload($event)" *ngIf="(book | async); let b">
+    <label class="file">
+      <input class="file-input" type="file" (change)="startUpload($event.target.files)">
+      <img [src]="preview" *ngIf="b?.thumbnails?.cover; let preview">
+      <div class="image-label" *ngIf="isHovering">Drop</div>
+      <div class="image-label" *ngIf="!isHovering">Choose a file</div>
+      <div class="progress" *ngIf="percentage | async as pct">
+        <mat-progress-bar [value]="pct"></mat-progress-bar>
+      </div>
+    </label>
+  </div>
+  <div class="zone"*ngIf="!(book | async)">
+    <div class="image-label">Book must be saved first</div>
+  </div>
 </div>

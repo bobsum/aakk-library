@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize, switchMap, tap, map, last } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Book } from '../models/book';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-image-upload',
@@ -35,11 +35,9 @@ export class ImageUploadComponent implements OnInit {
       return;
     }
 
-    console.log(this.bookRef.ref.path); // todo use this path when save file;
+    const path = this.bookRef.ref.path;
 
-    /*const task = this.storage.upload(this.path, file);
-    this.percentage = task.percentageChanges();*/
-
-    // todo update book image with download url
+    const task = this.storage.upload(`${path}/image.jpg`, file);
+    this.percentage = task.percentageChanges();
   }
 }
