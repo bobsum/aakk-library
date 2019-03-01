@@ -15,3 +15,18 @@
     <div class="image-label">Book must be saved first</div>
   </div>
 </div>
+
+<div class="ant-upload ant-upload-drag" dropZone (hovered)="toggleHover($event)" (dropped)="startUpload($event)" [class.ant-upload-drag-hover]="isHovering">
+  <div (click)="uploader.click()" class="ant-upload ant-upload-btn" tabindex="0" role="button">
+    <input style="display: none;" type="file" #uploader (change)="startUpload($event.target.files)">
+    <div class="ant-upload-drag-container">
+      <p class="ant-upload-drag-icon">
+        <i nz-icon type="picture" theme="outline"></i>
+      </p>
+      <p class="ant-upload-text">Click or drag image to this area to upload</p>
+    </div>
+    <div class="ant-upload-drag-container" *ngIf="percentage | async; let pct">
+        <nz-progress [nzPercent]="pct" nzType="circle"></nz-progress>
+      </div>
+  </div>
+</div>

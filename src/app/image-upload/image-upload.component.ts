@@ -41,3 +41,6 @@ export class ImageUploadComponent implements OnInit {
     this.percentage = task.percentageChanges();
   }
 }
+
+
+// todo handle disable and more
