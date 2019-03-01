@@ -13,23 +13,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
-import { StateComponent } from './state/state.component';
-import { BookCardComponent } from './book-card/book-card.component';
-import { BookCardSmallComponent } from './book-card-small/book-card-small.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { LoginComponent } from './login/login.component';
 import { DropZoneDirective } from './drop-zone.directive';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { BookListComponent } from './book-list/book-list.component';
+import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+
+registerLocaleData(en);
 
 @NgModule({
   declarations: [
     AppComponent,
     BooksComponent,
     BookEditComponent,
-    StateComponent,
-    BookCardComponent,
-    BookCardSmallComponent,
     BookCreateComponent,
     LoginComponent,
     DropZoneDirective,
@@ -44,9 +44,11 @@ import { BookListComponent } from './book-list/book-list.component';
     AngularFireAuthModule,
     AngularFireStorageModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgZorroAntdModule,
+    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -45,11 +45,12 @@ export class BookCreateComponent implements OnInit {
   }
 
   async createBook(book: Book) {
-    const bookId = this.afs.createId();
+    console.log(book);
+    /*const bookId = this.afs.createId();
     await this.afs.doc<Book>(`books/${bookId}`)
       .set(book, { merge: true });
 
-    this.router.navigate(['books', bookId, 'edit']);
+    this.router.navigate(['books', bookId, 'edit']);*/
   }
 
   createManually() {

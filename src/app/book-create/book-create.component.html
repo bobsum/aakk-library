@@ -1,16 +1,25 @@
 <form [formGroup]="searchForm">
   <h2 mat-dialog-title>Search Book</h2>
-  <input placeholder="ISBN" formControlName="isbn">
+  <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
+    <input type="text" nz-input placeholder="ISBN" formControlName="isbn">
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon type="search"></i>
+  </ng-template>
+
   <span *ngIf="serching">searching...</span>
   <br/>
   <div *ngFor="let book of books$ | async">
-    <app-book-card-small [book]="book">
-      <button (click)="createBook(book)">
-        add
-      </button>
-    </app-book-card-small>
+    <nz-card nzHoverable style="width:240px"
+      [nzCover]="coverTemplate"
+      (click)="createBook(book)">
+      <nz-card-meta [nzTitle]="book.title" [nzDescription]="book.subtitle"></nz-card-meta>
+    </nz-card>
+    <ng-template #coverTemplate>
+      <img [src]="book.imageUrl"/>
+    </ng-template>
     <br/>
   </div>
 </form>
 
-<button (click)="createManually()">Create manually</button>
+<button nz-button nzType="primary" (click)="createManually()">Create manually</button>

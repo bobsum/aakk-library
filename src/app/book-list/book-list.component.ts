@@ -25,8 +25,6 @@ export class BookListComponent implements OnInit {
   }
 
   deleteBook(bookId: string) {
-    if (confirm('Are you sure you want to delete the book?')) {
-      this.afs.doc(`books/${bookId}`).delete();
-    }
+    this.afs.doc(`books/${bookId}`).delete();
   }
 }

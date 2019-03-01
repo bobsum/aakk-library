@@ -1,9 +1,12 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div *ngIf="afAuth.user | async as user">
+<div *ngIf="afAuth.user | async; let user">
   <div>
-    <img *ngIf="user.photoURL" [src]="user.photoURL">
+    <nz-avatar
+      nzIcon="user"
+      [nzSize]="64"
+      [nzSrc]="user.photoURL"></nz-avatar>
     <h3>{{ user.displayName }}</h3>
-    <button (click)="logout()">Logout</button>
+    <button nz-button nzType="default" (click)="logout()">Logout</button>
   </div>
 </div>
 <hr/>

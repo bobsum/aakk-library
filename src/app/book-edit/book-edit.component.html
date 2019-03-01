@@ -1,36 +1,33 @@
 <form [formGroup]="bookForm" (ngSubmit)="saveBook()">
-  <input placeholder="ISBN" formControlName="isbn">
-  <br/>
-  <select placeholder="Format" formControlName="printType" required>
-    <option value="BOOK">Book</option>
-    <option value="DVD">DVD</option>
-    <option value="VHS">VHS</option>
-  </select>
-  <br/>
-  <input placeholder="Title" formControlName="title" required>
-  <br/>
-  <input placeholder="Subtitle" formControlName="subtitle">
-  <br/>
-  <hr/>
+  <input nz-input placeholder="ISBN" formControlName="isbn">
+  <nz-select nzPlaceHolder="Format" formControlName="printType" required>
+    <nz-option nzValue="BOOK" nzLabel="Book"></nz-option>
+    <nz-option nzValue="DVD" nzLabel="DVD"></nz-option>
+    <nz-option nzValue="VHS" nzLabel="VHS"></nz-option>
+  </nz-select>
+  <input nz-input placeholder="Title" formControlName="title" required>
+  <input nz-input placeholder="Subtitle" formControlName="subtitle">
+  <nz-divider nzText="Authors"></nz-divider>
   <div *ngFor="let author of authors.controls; let i=index">
-    <input placeholder="Author" [formControl]="author">
-    <button (click)="deleteAuthor(i)">delete</button>
-    <br/>
+    <nz-input-group [nzAddOnAfter]="delAuthor">
+      <input type="text" nz-input placeholder="Author" [formControl]="author">
+    </nz-input-group>
+    <ng-template #delAuthor>
+      <a (click)="deleteAuthor(i)">
+        <i nz-icon type="delete"></i>
+      </a>
+    </ng-template>
   </div>
-  <button (click)="addAuthor()">Add Author</button>
-  <hr/>
-  <br/>
-  <input placeholder="PublishedDate" formControlName="publishedDate">
-  <br/>
-  <input placeholder="Language" formControlName="language">
-  <br/>
-  <input placeholder="Pages" formControlName="pageCount">
-  <br/>
-  <textarea placeholder="Description" formControlName="description"></textarea>
-  <br/>
-  <textarea placeholder="Note" formControlName="note"></textarea>
-  <br/>
+  <nz-divider nzDashed [nzText]="text" >
+    <ng-template #text>
+      <a (click)="addAuthor()"><i nz-icon type="plus"></i> Add Author</a>
+    </ng-template>
+  </nz-divider>
+  <input nz-input placeholder="PublishedDate" formControlName="publishedDate">
+  <input nz-input placeholder="Language" formControlName="language">
+  <input nz-input placeholder="Pages" formControlName="pageCount">
+  <textarea nz-input [nzAutosize]="{ minRows: 4 }" placeholder="Description" formControlName="description"></textarea>
+  <textarea nz-input [nzAutosize]="{ minRows: 4 }" placeholder="Note" formControlName="note"></textarea>
   <app-image-upload [bookRef]="bookRef"></app-image-upload>
-  <br/>
-  <button [disabled]="state !== 'modified'">Save</button>
+  <button nz-button nzType="primary" [disabled]="state !== 'modified'">Save</button>
 </form>

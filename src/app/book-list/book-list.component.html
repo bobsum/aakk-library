@@ -1,11 +1,30 @@
-<div *ngFor="let book of books$ | async">
-  <app-book-card-small [book]="book.data">
-    <a [routerLink]="['/books', book.id, 'edit']">
-      edit
-    </a>
-    <button (click)="deleteBook(book.id)">
-      delete
-    </button>
-  </app-book-card-small>
-  <br/>
-</div>
+<nz-list [nzDataSource]="books$ | async" [nzRenderItem]="item">
+  <ng-template #item let-item>
+    <nz-list-item *ngIf="item.data; let book" [nzActions]="[editAction,deleteAction]">
+      <nz-list-item-meta
+        [nzTitle]="book.title"
+        [nzAvatar]="avatar"
+        [nzDescription]="book.subtitle">
+        <ng-template #avatar>
+          <nz-avatar
+            nzText="Book"
+            [nzSrc]="book.thumbnails?.avatar"
+            [nzShape]="'square'"
+            [nzSize]="'large'"></nz-avatar>
+        </ng-template>
+      </nz-list-item-meta>
+      <ng-template #editAction>
+        <a [routerLink]="['/books', item.id, 'edit']">
+          <i nz-icon type="form" theme="outline"></i>
+        </a>
+      </ng-template>
+      <ng-template #deleteAction>
+        <a nz-popconfirm
+          nzTitle="Are you sure delete this book?"
+          (nzOnConfirm)="deleteBook(item.id)">
+          <i nz-icon type="delete"></i>
+        </a>
+      </ng-template>
+    </nz-list-item>
+  </ng-template>
+</nz-list>

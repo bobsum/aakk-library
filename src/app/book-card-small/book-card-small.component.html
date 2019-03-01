@@ -1,8 +1,0 @@
-<div class="example-card">
-  <div>
-    <img *ngIf="book?.thumbnails?.avatar" [src]="book?.thumbnails?.avatar">
-    <div>{{ book.title }}</div>
-    <div *ngIf="book?.subtitle">{{ book.subtitle }}</div>
-    <ng-content></ng-content>
-  </div>
-</div>
