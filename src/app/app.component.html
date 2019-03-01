@@ -1,10 +1,10 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<mat-list *ngIf="afAuth.user | async as user">
-  <mat-list-item>
-    <img mat-list-avatar *ngIf="user.photoURL" [src]="user.photoURL">
-    <h3 mat-line>{{ user.displayName }}</h3>
-    <button mat-raised-button (click)="logout()">Logout</button>
-  </mat-list-item>
-</mat-list>
-<mat-divider></mat-divider>
+<div *ngIf="afAuth.user | async as user">
+  <div>
+    <img *ngIf="user.photoURL" [src]="user.photoURL">
+    <h3>{{ user.displayName }}</h3>
+    <button (click)="logout()">Logout</button>
+  </div>
+</div>
+<hr/>
 <router-outlet></router-outlet>

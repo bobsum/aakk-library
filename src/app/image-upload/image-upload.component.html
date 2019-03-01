@@ -6,7 +6,8 @@
       <div class="image-label" *ngIf="isHovering">Drop</div>
       <div class="image-label" *ngIf="!isHovering">Choose a file</div>
       <div class="progress" *ngIf="percentage | async as pct">
-        <mat-progress-bar [value]="pct"></mat-progress-bar>
+        <!-- <mat-progress-bar [value]="pct"></mat-progress-bar> -->
+        {{ pct }}
       </div>
     </label>
   </div>

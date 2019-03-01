@@ -1,23 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatSelectModule,
-  MatTableModule,
-  MatToolbarModule
-} from '@angular/material';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -60,19 +44,6 @@ import { BookListComponent } from './book-list/book-list.component';
     AngularFireAuthModule,
     AngularFireStorageModule,
     HttpClientModule,
-    MatButtonModule,
-    MatCardModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    MatTableModule,
-    MatToolbarModule,
-    NoopAnimationsModule,
     ReactiveFormsModule
   ],
   providers: [],

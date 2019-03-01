@@ -1,58 +1,36 @@
 <form [formGroup]="bookForm" (ngSubmit)="saveBook()">
-  <mat-form-field>
-    <input matInput placeholder="ISBN" formControlName="isbn">
-  </mat-form-field>
+  <input placeholder="ISBN" formControlName="isbn">
   <br/>
-  <mat-form-field>
-    <mat-select placeholder="Format" formControlName="printType" required>
-      <mat-option value="BOOK">Book</mat-option>
-      <mat-option value="DVD">DVD</mat-option>
-      <mat-option value="VHS">VHS</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <select placeholder="Format" formControlName="printType" required>
+    <option value="BOOK">Book</option>
+    <option value="DVD">DVD</option>
+    <option value="VHS">VHS</option>
+  </select>
   <br/>
-  <mat-form-field>
-    <input matInput placeholder="Title" formControlName="title" required>
-  </mat-form-field>
+  <input placeholder="Title" formControlName="title" required>
   <br/>
-  <mat-form-field>
-    <input matInput placeholder="Subtitle" formControlName="subtitle">
-  </mat-form-field>
+  <input placeholder="Subtitle" formControlName="subtitle">
   <br/>
-  <mat-divider></mat-divider>
+  <hr/>
   <div *ngFor="let author of authors.controls; let i=index">
-    <mat-form-field>
-      <input matInput placeholder="Author" [formControl]="author">
-    </mat-form-field>
-    <button mat-icon-button (click)="deleteAuthor(i)" color="warn">
-      <mat-icon>delete</mat-icon>
-    </button>
+    <input placeholder="Author" [formControl]="author">
+    <button (click)="deleteAuthor(i)">delete</button>
     <br/>
   </div>
-  <button mat-raised-button (click)="addAuthor()">Add Author</button>
-  <mat-divider></mat-divider>
+  <button (click)="addAuthor()">Add Author</button>
+  <hr/>
   <br/>
-  <mat-form-field>
-    <input matInput placeholder="PublishedDate" formControlName="publishedDate">
-  </mat-form-field>
+  <input placeholder="PublishedDate" formControlName="publishedDate">
   <br/>
-  <mat-form-field>
-    <input matInput placeholder="Language" formControlName="language">
-  </mat-form-field>
+  <input placeholder="Language" formControlName="language">
   <br/>
-  <mat-form-field>
-    <input matInput placeholder="Pages" formControlName="pageCount">
-  </mat-form-field>
+  <input placeholder="Pages" formControlName="pageCount">
   <br/>
-  <mat-form-field>
-    <textarea matInput placeholder="Description" formControlName="description"></textarea>
-  </mat-form-field>
+  <textarea placeholder="Description" formControlName="description"></textarea>
   <br/>
-  <mat-form-field>
-    <textarea matInput placeholder="Note" formControlName="note"></textarea>
-  </mat-form-field>
+  <textarea placeholder="Note" formControlName="note"></textarea>
   <br/>
-    <app-image-upload [bookRef]="bookRef"></app-image-upload>
+  <app-image-upload [bookRef]="bookRef"></app-image-upload>
   <br/>
-  <button mat-raised-button color="primary" [disabled]="state !== 'modified'">Save</button>
+  <button [disabled]="state !== 'modified'">Save</button>
 </form>
